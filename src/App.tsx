@@ -124,10 +124,15 @@ export default function App() {
             className="w-full max-w-2xl z-20"
           >
             <div className="bg-paper shadow-xl rounded-lg p-6 md:p-12 border border-black/5 min-h-[600px] flex flex-col">
-              <header className="mb-12 text-center">
-                <h1 className="serif text-4xl md:text-5xl font-light mb-2">Unsent Echoes</h1>
-                <p className="text-sm uppercase tracking-[0.2em] opacity-50">A collection of letters never sent</p>
-              </header>
+<header className="mb-12 text-center flex flex-col items-center gap-4">
+  <div className="bg-white p-3 rounded-full shadow-sm border border-black/5">
+    <Mail size={32} strokeWidth={1.5} className="text-black/70" />
+  </div>
+  <div>
+    <h1 className="serif text-4xl md:text-5xl font-light mb-2">Letters I Never Sent</h1>
+    <p className="text-sm uppercase tracking-[0.2em] opacity-50">A collection of echoes preserved in ink</p>
+  </div>
+</header>
 
               <div className="space-y-6 flex-1">
                 {LETTERS.map((letter) => (
