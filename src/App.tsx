@@ -143,7 +143,7 @@ export default function App() {
                     className="group cursor-pointer border-b border-black/5 pb-4 flex items-center justify-between"
                   >
                     <div>
-                      <h2 className="serif text-xl md:text-2xl group-hover:text-heart transition-colors">
+                     <h2 className="serif text-xl md:text-2xl group-hover:text-[#87a96b] transition-colors">
                         {letter.title}
                       </h2>
                       <p className="text-xs opacity-40 uppercase tracking-wider mt-1">
