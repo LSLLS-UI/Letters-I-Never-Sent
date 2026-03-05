@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Heart, ArrowLeft, MailOpen, Mail } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 import { LETTERS, Letter } from './constants';
 
 export default function App() {
@@ -213,6 +214,7 @@ export default function App() {
 
       {/* Atmospheric Elements */}
       <div className="fixed bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#f5f2ed] to-transparent pointer-events-none z-10" />
+      <Analytics />
     </main>
   );
 }
