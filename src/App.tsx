@@ -93,7 +93,7 @@ export default function App() {
       {/* Hidden Audio Player */}
       <audio 
         ref={audioRef} 
-        src="/California and Me (Instrumental).mp3" 
+        src="Laufey - Nocturne (Interlude) (Official Audio).mp3" 
         loop 
       />
 
