@@ -1,26 +1,50 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Heart, ArrowLeft, MailOpen, Mail } from 'lucide-react';
+import { Heart, ArrowLeft, MailOpen, Mail, Lock } from 'lucide-react'; // Added Lock icon
 import { LETTERS, Letter } from './constants';
 
 export default function App() {
   const [viewState, setViewState] = useState<'closed' | 'opening' | 'list' | 'detail'>('closed');
   const [selectedLetter, setSelectedLetter] = useState<Letter | null>(null);
+  
+  // --- SEQUENTIAL LOGIC STATE ---
+  const [unlockedId, setUnlockedId] = useState(() => {
+    const saved = localStorage.getItem('unlocked_letter_id');
+    return saved ? parseInt(saved) : 1;
+  });
+  const [notification, setNotification] = useState<string | null>(null);
+  const [shakingId, setShakingId] = useState<string | null>(null);
 
   const handleOpenEnvelope = () => {
     setViewState('opening');
-    // Sequence: 
-    // 1. Flap opens (handled by CSS/Motion)
-    // 2. Paper slides out
-    // 3. Zoom in to list
     setTimeout(() => {
       setViewState('list');
-    }, 1200); // Wait for flap and slide out animation
+    }, 1200);
   };
 
   const handleSelectLetter = (letter: Letter) => {
+    const numericId = parseInt(letter.id);
+
+    // Check if letter is locked
+    if (numericId > unlockedId) {
+      setNotification("Read the ones above first...");
+      setShakingId(letter.id);
+      setTimeout(() => {
+        setNotification(null);
+        setShakingId(null);
+      }, 2500);
+      return;
+    }
+
     setSelectedLetter(letter);
     setViewState('detail');
+
+    // Unlock the next letter if this is the current "newest" one
+    if (numericId === unlockedId && unlockedId < LETTERS.length) {
+      const nextId = unlockedId + 1;
+      setUnlockedId(nextId);
+      localStorage.setItem('unlocked_letter_id', nextId.toString());
+    }
   };
 
   const handleBackToList = () => {
@@ -35,7 +59,20 @@ export default function App() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 md:p-8 relative overflow-hidden bg-[#f5f2ed]">
-      {/* Background Texture */}
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: -20, x: '-50%' }}
+            className="toast-notification serif italic"
+          >
+            {notification}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="absolute inset-0 opacity-20 pointer-events-none" 
            style={{ backgroundImage: 'radial-gradient(#000 0.5px, transparent 0.5px)', backgroundSize: '20px 20px' }} />
 
@@ -48,15 +85,12 @@ export default function App() {
             exit={{ scale: 2, opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
             className="relative flex items-center justify-center"
           >
-            {/* The Envelope */}
             <div 
               className="relative w-72 h-48 md:w-96 md:h-64 bg-[#fdfcf8] shadow-2xl rounded-sm border border-black/5 cursor-pointer group"
               onClick={viewState === 'closed' ? handleOpenEnvelope : undefined}
             >
-              {/* Back Flap (Inside) */}
               <div className="absolute inset-0 bg-[#f0ede8] rounded-sm" />
 
-              {/* The Paper sliding out */}
               <motion.div
                 initial={{ y: 0, opacity: 0 }}
                 animate={viewState === 'opening' ? { 
@@ -71,17 +105,12 @@ export default function App() {
                 <div className="w-1/2 h-2 bg-black/5 rounded-full" />
               </motion.div>
 
-              {/* Front Flaps */}
               <div className="absolute inset-0 z-20 pointer-events-none">
-                {/* Left Flap */}
                 <div className="absolute inset-0 border-l-[144px] md:border-l-[192px] border-l-[#fdfcf8] border-t-[96px] md:border-t-[128px] border-t-transparent border-b-[96px] md:border-b-[128px] border-b-transparent" />
-                {/* Right Flap */}
                 <div className="absolute inset-0 border-r-[144px] md:border-r-[192px] border-r-[#fdfcf8] border-t-[96px] md:border-t-[128px] border-t-transparent border-b-[96px] md:border-b-[128px] border-b-transparent" />
-                {/* Bottom Flap */}
                 <div className="absolute inset-0 border-b-[96px] md:border-b-[128px] border-b-[#fdfcf8] border-l-[144px] md:border-l-[192px] border-l-transparent border-r-[144px] md:border-r-[192px] border-r-transparent" />
               </div>
 
-              {/* Top Flap (Animated) */}
               <motion.div 
                 className="absolute top-0 left-0 w-full h-1/2 bg-[#fdfcf8] z-30 origin-top border-b border-black/5"
                 initial={{ rotateX: 0 }}
@@ -92,7 +121,6 @@ export default function App() {
                 <div className="absolute inset-0 border-t-[96px] md:border-t-[128px] border-t-[#fdfcf8] border-l-[144px] md:border-l-[192px] border-l-transparent border-r-[144px] md:border-r-[192px] border-r-transparent" />
               </motion.div>
 
-              {/* Heart Stamp (Only visible when closed) */}
               {viewState === 'closed' && (
                 <motion.div 
                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 bg-white p-3 rounded-full shadow-md border border-red-100 flex items-center justify-center"
@@ -117,42 +145,46 @@ export default function App() {
             initial={{ opacity: 0, scale: 0.2, y: -50 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ 
-              duration: 0.8, 
-              ease: [0.16, 1, 0.3, 1], // Custom ease-out-expo
-            }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="w-full max-w-2xl z-20"
           >
             <div className="bg-paper shadow-xl rounded-lg p-6 md:p-12 border border-black/5 min-h-[600px] flex flex-col">
-<header className="mb-12 text-center flex flex-col items-center gap-4">
-  <div className="bg-white p-3 rounded-full shadow-sm border border-black/5">
-    <Mail size={32} strokeWidth={1.5} className="text-black/70" />
-  </div>
-  <div>
-    <h1 className="serif text-4xl md:text-5xl font-light mb-2">Letters I Never Sent</h1>
-    <p className="text-sm uppercase tracking-[0.2em] opacity-50">A collection of echoes preserved in ink</p>
-  </div>
-</header>
+              <header className="mb-12 text-center flex flex-col items-center gap-4">
+                <div className="bg-white p-3 rounded-full shadow-sm border border-black/5">
+                  <Mail size={32} strokeWidth={1.5} className="text-black/70" />
+                </div>
+                <div>
+                  <h1 className="serif text-4xl md:text-5xl font-light mb-2">Letters I Never Sent</h1>
+                  <p className="text-sm uppercase tracking-[0.2em] opacity-50">A collection of echoes preserved in ink</p>
+                </div>
+              </header>
 
               <div className="space-y-6 flex-1">
-                {LETTERS.map((letter) => (
-                  <motion.div
-                    key={letter.id}
-                    whileHover={{ x: 10 }}
-                    onClick={() => handleSelectLetter(letter)}
-                    className="group cursor-pointer border-b border-black/5 pb-4 flex items-center justify-between"
-                  >
-                    <div>
-                     <h2 className="serif text-xl md:text-2xl group-hover:text-[#87a96b] transition-colors">
-                        {letter.title}
-                      </h2>
-                      <p className="text-xs opacity-40 uppercase tracking-wider mt-1">
-                        To: {letter.recipient} • {letter.date}
-                      </p>
-                    </div>
-                    <Mail className="w-4 h-4 opacity-0 group-hover:opacity-30 transition-opacity" />
-                  </motion.div>
-                ))}
+                {LETTERS.map((letter) => {
+                  const isLocked = parseInt(letter.id) > unlockedId;
+                  const isShaking = shakingId === letter.id;
+
+                  return (
+                    <motion.div
+                      key={letter.id}
+                      whileHover={!isLocked ? { x: 10 } : {}}
+                      onClick={() => handleSelectLetter(letter)}
+                      className={`group cursor-pointer border-b border-black/5 pb-4 flex items-center justify-between transition-all 
+                        ${isLocked ? 'letter-locked' : ''} 
+                        ${isShaking ? 'animate-shake' : ''}`}
+                    >
+                      <div>
+                        <h2 className="serif text-xl md:text-2xl group-hover:text-[#87a96b] transition-colors">
+                          {isLocked ? "???" : letter.title}
+                        </h2>
+                        <p className="text-xs opacity-40 uppercase tracking-wider mt-1">
+                          To: {isLocked ? "???" : letter.recipient} • {letter.date}
+                        </p>
+                      </div>
+                      {isLocked ? <Lock className="w-4 h-4 opacity-20" /> : <Mail className="w-4 h-4 opacity-0 group-hover:opacity-30 transition-opacity" />}
+                    </motion.div>
+                  );
+                })}
               </div>
 
               <footer className="mt-12 pt-8 border-t border-black/5 text-center">
@@ -211,7 +243,6 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Atmospheric Elements */}
       <div className="fixed bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#f5f2ed] to-transparent pointer-events-none z-10" />
     </main>
   );
