@@ -1,12 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Heart, ArrowLeft, MailOpen, Mail, Lock } from 'lucide-react'; // Added Lock icon
+import { Heart, ArrowLeft, MailOpen, Mail, Lock, Volume2, VolumeX } from 'lucide-react'; 
 import { LETTERS, Letter } from './constants';
 
 export default function App() {
   const [viewState, setViewState] = useState<'closed' | 'opening' | 'list' | 'detail'>('closed');
   const [selectedLetter, setSelectedLetter] = useState<Letter | null>(null);
   
+  // --- AUDIO STATE ---
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
   // --- SEQUENTIAL LOGIC STATE ---
   const [unlockedId, setUnlockedId] = useState(() => {
     const saved = localStorage.getItem('unlocked_letter_id');
@@ -17,9 +21,29 @@ export default function App() {
 
   const handleOpenEnvelope = () => {
     setViewState('opening');
+    
+    // Play audio on first interaction
+    if (audioRef.current) {
+      audioRef.current.volume = 0.5;
+      audioRef.current.play()
+        .then(() => setIsPlaying(true))
+        .catch((err) => console.log("Audio play failed:", err));
+    }
+
     setTimeout(() => {
       setViewState('list');
     }, 1200);
+  };
+
+  const toggleAudio = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
   };
 
   const handleSelectLetter = (letter: Letter) => {
@@ -55,10 +79,51 @@ export default function App() {
   const handleCloseAll = () => {
     setViewState('closed');
     setSelectedLetter(null);
+    
+    // Pause audio when returning to start
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
   };
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 md:p-8 relative overflow-hidden bg-[#f5f2ed]">
+      
+      {/* Hidden Audio Player */}
+      <audio 
+        ref={audioRef} 
+        src="/California and Me (Instrumental).mp3" 
+        loop 
+      />
+
+      {/* Floating Audio Toggle */}
+      <AnimatePresence>
+        {viewState !== 'closed' && viewState !== 'opening' && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="fixed top-6 right-6 md:top-8 md:right-8 z-50 flex items-center gap-3"
+          >
+            <div className="hidden md:flex flex-col items-end opacity-40 select-none">
+              <span className="serif italic text-xs">California and Me</span>
+              <span className="text-[9px] uppercase tracking-widest">Playing now</span>
+            </div>
+            <button
+              onClick={toggleAudio}
+              className="w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-black/5 flex items-center justify-center text-black/60 hover:text-black hover:bg-white transition-all group cursor-pointer"
+            >
+              {isPlaying ? (
+                <Volume2 size={18} strokeWidth={1.5} className="group-hover:scale-110 transition-transform" />
+              ) : (
+                <VolumeX size={18} strokeWidth={1.5} className="group-hover:scale-110 transition-transform" />
+              )}
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Toast Notification */}
       <AnimatePresence>
         {notification && (
@@ -74,7 +139,7 @@ export default function App() {
       </AnimatePresence>
 
       <div className="absolute inset-0 opacity-20 pointer-events-none" 
-           style={{ backgroundImage: 'radial-gradient(#000 0.5px, transparent 0.5px)', backgroundSize: '20px 20px' }} />
+            style={{ backgroundImage: 'radial-gradient(#000 0.5px, transparent 0.5px)', backgroundSize: '20px 20px' }} />
 
       <AnimatePresence mode="wait">
         {(viewState === 'closed' || viewState === 'opening') && (
@@ -190,7 +255,7 @@ export default function App() {
               <footer className="mt-12 pt-8 border-t border-black/5 text-center">
                 <button 
                   onClick={handleCloseAll}
-                  className="text-xs uppercase tracking-widest opacity-30 hover:opacity-100 transition-opacity"
+                  className="text-xs uppercase tracking-widest opacity-30 hover:opacity-100 transition-opacity cursor-pointer"
                 >
                   Close Envelope
                 </button>
@@ -210,7 +275,7 @@ export default function App() {
             <div className="bg-paper shadow-2xl rounded-lg p-8 md:p-16 border border-black/5 min-h-[600px] relative">
               <button
                 onClick={handleBackToList}
-                className="absolute top-8 left-8 flex items-center gap-2 text-sm opacity-40 hover:opacity-100 transition-opacity group"
+                className="absolute top-8 left-8 flex items-center gap-2 text-sm opacity-40 hover:opacity-100 transition-opacity group cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                 <span>Back</span>
