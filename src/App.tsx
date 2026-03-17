@@ -107,7 +107,7 @@ export default function App() {
             className="fixed top-6 right-6 md:top-8 md:right-8 z-50 flex items-center gap-3"
           >
             <div className="hidden md:flex flex-col items-end opacity-40 select-none">
-              <span className="serif italic text-xs">California and Me</span>
+              <span className="serif italic text-xs">Nocturne (Interlude)</span>
               <span className="text-[9px] uppercase tracking-widest">Playing now</span>
             </div>
             <button
