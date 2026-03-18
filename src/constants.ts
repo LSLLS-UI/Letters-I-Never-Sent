@@ -42,14 +42,14 @@ The way you notice the smallest details draws me in and before I know it, I'm gr
   },
   {
     id: "4",
-    title: "The Anchor",
-    recipient: "My favorite daily rhythm",
+    title: "Subtlety",
+    recipient: "Started being aware towards you",
     date: "February 14, 2026",
-    content: `The truth is, I love how much we talk. It’s easily the part of my day I look forward to the most.
+    content: `I'll be honest, I realize I still have so many things to learn about you. Every day is something new; there's never a dull moment with you.
 
-But because I’ve started seeing you in this different light, I’ve become much more aware of the pace we’ve found. I know how much you value your peace—your art, your books, and the quiet hours you spend on your own.
+But lately, I've spent a lot of time wondering if I'm taking up your time or if I'm a seamless part of your day. I know how much you value your time and your hobbies. 
 
-I’m just being intentional because I never want our conversations to feel like a habit or a routine. I’d much rather be a "rest" for you—the person you talk to because you actually want to, and not just because we’ve reached a point where we talk every day.`
+I don't want to be another notification you have to check; I want to be a safe space—the person you’re comfortable telling how your day went, no matter how it looked.`
   },
   {
     id: "5",
