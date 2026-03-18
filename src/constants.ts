@@ -43,33 +43,43 @@ The way you notice the smallest details draws me in and before I know it, I'm gr
   {
     id: "4",
     title: "Subtlety",
-    recipient: "Started being aware towards you",
+    recipient: "The girl I’m always happy to hear from",
     date: "February 14, 2026",
-    content: `I'll be honest, I realize I still have so many things to learn about you. Every day is something new; there's never a dull moment with you.
+    content: `I realize I still have so many things to learn about you. Every day is something new; there's never a dull moment with you.
 
 But lately, I've spent a lot of time wondering if I'm taking up your time or if I'm a seamless part of your day. I know how much you value your time and your hobbies. 
 
-I don't want to be another notification you have to check; I want to be a safe space—the person you’re comfortable telling how your day went, no matter how it looked.`
+I don't want to be another notification you have to check; I want to be a safe space—the person you’re comfortable telling how your day went, no matter how it looked. I'm just happy to be a part of it.`
   },
   {
     id: "5",
-    title: "The Source Code",
+    title: "This is Me",
     recipient: "The one who makes my brain go quiet",
-    date: "March 17, 2026",
-    content: `The previous letters you read were very polished—very performative. I wanted to try something different for this last one.
+    date: "March 15, 2026",
+    content: `
+All of the previous letters were a bit more polished—maybe even a little performative. I wanted this one to be different.
 
-Do you remember me from before? When I told you how much I loved creating and giving letters? Even if you don't, this is the first time in six years I’ve made one again. Out of everything in this project, these are my most raw and unfiltered feelings.
+Do you remember when I used to say how much I loved making letters? It’s been a while. This is actually my first time doing this again in six years.
 
-I’ve come to love you. That’s it.
+So this one’s a little more straightforward.
 
-I never expected anything when we reconnected. I genuinely just wanted to be friends again because you’re a great person. I loved how you saw things differently; your positivity is contagious. I love the way you see the world.
+I didn’t expect that when we reconnected. I genuinely just wanted to be friends again—you’re a great person, and I’ve always liked how you see things differently. Your positivity is kind of contagious.
 
-I liked you even before—I mean, who wouldn't? You’re beautiful. But now? I’ve come to love you for who you truly are. I love your eyes when you’re talking about something you're passionate about. I love it when you "yap"—I will always listen to every story you share, whether it's a problem at work, drama with friends, or just a happy moment you wanted to tell someone.
+I’ve liked you even before—honestly, that part was easy. You’re beautiful.
 
-We don’t meet often, but I love hanging out with you. I never get tired when I'm with you; I just want the day to last a little longer whenever we’re together. There’s never a dull moment. I love how consistent and transparent you are. I’m a person who overthinks everything, but with you? I can just turn off my brain and have fun.
+But this feels different now. I’ve come to love you for who you are.
 
-Maybe you’re just like this with all your friends, and I’m the only one who fell. But I wanted you to know how I feel. Maybe there’s no chance, or maybe I’m too early, but I couldn't live with myself if I never told you.
+The way you talk about things you care about, the little details you notice, the way you share your stories—I like all of it. I could listen to you for hours and not get tired of it.
 
-I love you, very much. Words are an understatement.`
+We don’t get to see each other often, but I always enjoy the time we do. It never feels dull, and it always feels a little too short.
+
+I overthink a lot, but with you, it’s quiet. I can just be there and enjoy the moment, and that means more than I probably say out loud.
+
+I won’t drag this out any longer.
+
+Somewhere along the way, I realized I love you. I really do.
+
+I don’t know what this means for you, and I’m not asking for anything right away. I just wanted to be honest with how I feel.
+`
   }
 ];
