@@ -77,9 +77,7 @@ I overthink a lot, but with you, it’s quiet. I can just be there and enjoy the
 
 I won’t drag this out any longer.
 
-Somewhere along the way, I realized I love you. I really do.
-
-I don’t know what this means for you, and I’m not asking for anything right away. I just wanted to be honest with how I feel.
+I wanted to be honest about my feelings. I like you—more than just as a friend and I’m not asking for any immediate change. I just wanted you to know, this is how I feel
 `
   }
 ];
